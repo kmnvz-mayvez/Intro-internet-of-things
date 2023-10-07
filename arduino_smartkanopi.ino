@@ -5,16 +5,13 @@
 #include <ESP32Servo.h>
 
 // declare servo
-  Servo myservo;
+Servo myservo;
 
 // create const pin 
 const int pinWater = 35;
-const int pinLight = 25;
 
 // crate variable 
 int water;
-int light;
-int sensorValue = 0;
 int cl = 110;
 int op = 10;
 bool servoActive = true;
@@ -31,41 +28,24 @@ void myWaterStrength() {
 // main funct to create automatic_rainsensor
 void myFunction() {
   water = digitalRead(pinWater);
-  light = digitalRead(pinLight);
   
   if (water == 1) {
     Serial.println("no water");
   } else if (water == 0) {
     Serial.println("water detec");
   }
-  
-  Serial.print("Value = light :");
-  Serial.println(light);
-   if (light == 1) {
-    Serial.println("dark");
-  } else if (light == 0) {
-    Serial.println("light");
-  }
 
    if (servoActive) {
-    if (water == 0 && light == 1) {
+    if (water == 0) {
       myservo.write(cl);
       Serial.println("close");
-    } else if (water == 0 && light == 0) {
-      myservo.write(cl);
-      Serial.println("close");
-    } else if (water == 1 && light == 0) {
+    } else if (water == 1) {
       myservo.write(op);
       Serial.println("open");
-    } else if (water == 1 && light == 1) {
-      myservo.write(cl);
-      Serial.println("close");
-    }
   } else {
     myservo.writeMicroseconds(0);
     Serial.println("servo not active");
   }
-
   delay(500);
 }
 
@@ -73,7 +53,6 @@ void myFunction() {
 void setup() {
   myservo.attach(13);
   pinMode(pinWater, INPUT);
-  pinMode(pinLight, INPUT); 
   Serial.begin(115200);
 }
 
